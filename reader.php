@@ -16,8 +16,10 @@ if (isset($_GET['file'])) {
 $file = isset($_SESSION['original_file']) ? $_SESSION['original_file'] : '';
 
 //retrieve the correct theme
-$theme = isset($_COOKIE['theme']) ? $_COOKIE['theme'] : 'light-mode';
+$theme = isset($_COOKIE['theme']) ? $_COOKIE['theme'] : (isset($_SESSION['theme']) ? $_SESSION['theme'] : 'light-mode');
+$_SESSION['theme'] = $theme; // Keep theme across pages
 echo "<body class='$theme' onload='applyTheme();'>";
+
 
 
 if (!$file) {
@@ -201,6 +203,8 @@ $content = file_get_contents($htmlFiles[$page]);
 		}
 
 
+
+
 		
     </style>
 </head>
@@ -211,7 +215,7 @@ $content = file_get_contents($htmlFiles[$page]);
 		<select id="toc-dropdown" onchange="jumpToChapter(this.value)">
 			<?php foreach ($htmlFiles as $index => $file) { ?>
 				<option value="<?php echo $index; ?>">
-					Page <?php echo $index + 1; ?>
+					<?php echo $index + 1; ?>
 				</option>
 			<?php } ?>
 		</select>
@@ -219,8 +223,9 @@ $content = file_get_contents($htmlFiles[$page]);
 		<button class="button-icon" onclick="setTheme('light-mode')">🎨</button>
 		<button class="button-icon" onclick="setTheme('dark-mode')">🌙</button>
 		<button class="button-icon" onclick="setTheme('sepia-mode')">📜</button>
-
-		<button class="button-icon" onclick="readAloud()">🔊</button>
+		<button class="button-icon" onclick="saveBookmark()">📌</button>
+		<button class="button-icon" onclick="loadBookmark()">📖</button>
+	<!--	<button class="button-icon" onclick="readAloud()">🔊</button>-->
 		<button class="button-icon" id="increaseFont">➕</button>
 		<button class="button-icon" id="decreaseFont">➖</button>
 		<button class="button-icon" onclick="window.location.href='index_reader.php'">🏠</button>
@@ -245,6 +250,24 @@ $content = file_get_contents($htmlFiles[$page]);
 
     <script>
 		
+		function saveBookmark() {
+			let currentPage = <?php echo $page; ?>;
+			let bookTitle = "<?php echo urlencode($_SESSION['original_file']); ?>";
+			localStorage.setItem("bookmark_" + bookTitle, currentPage);
+			alert("📌 Bookmark saved!");
+		}
+		
+		function loadBookmark() {
+			let bookTitle = "<?php echo urlencode($_SESSION['original_file']); ?>";
+			let savedPage = localStorage.getItem("bookmark_" + bookTitle);
+
+			if (savedPage !== null) {
+				window.location.href = "reader.php?file=" + bookTitle + "&page=" + savedPage;
+			} else {
+				alert("❌ No bookmark found!");
+			}
+		}
+
 
 
 		//table of content jumping
@@ -276,11 +299,9 @@ $content = file_get_contents($htmlFiles[$page]);
 		function setTheme(theme) {
 			document.body.className = theme;
 			localStorage.setItem("theme", theme);
-			document.cookie = "theme=" + theme + "; path=/";
+			document.cookie = "theme=" + theme + "; path=/"; // Store theme in cookie for persistence
+			applyTheme(); // Refresh theme immediately
 		}
-
-
-
 
 		function applyTheme() {
 			const savedTheme = localStorage.getItem("theme") || "light-mode"; 

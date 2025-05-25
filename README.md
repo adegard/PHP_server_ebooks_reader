@@ -1,7 +1,7 @@
 
 # EPUB Web server Reader 📖
 
-A lightweight web-based EPUB reader with **scroll navigation, page transitions, dark mode, and font size adjustments...**. Designed for a seamless e-reader experience directly in a browser, installed on a Raspebeery PI or other arm home-server.
+A lightweight web-based EPUB reader with **scroll navigation, page transitions, dark mode, and font size adjustments...**. Designed for a seamless e-reader experience directly in a browser, by connecting to the server PHP installed on a Raspeberry PI or other arm/pc home-server.
 
 ## Features ✨
 - 📚 **Upload & Delete EPUBs** from the server (`index_reader.php`) from /ebooks sub-folder (usually in /var/www)

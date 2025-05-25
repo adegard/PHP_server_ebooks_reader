@@ -6,7 +6,7 @@
 A lightweight web-based EPUB reader with **scroll navigation, page transitions, dark mode, and font size adjustments**. Designed for a seamless e-reader experience directly in a browser.
 
 ## Features ✨
-- 📚 **Upload & Delete EPUBs** from the server (`index_reader.php`)
+- 📚 **Upload & Delete EPUBs** from the server (`index_reader.php`) from /ebooks sub-folder (usually in /var/www)
 - 📖 **Read EPUBs** in the browser (`reader.php`)
 - 🔄 **Navigation Buttons** to scroll **page by page**
 - 🌙 **Dark Mode** toggle (saves preference)
@@ -14,8 +14,6 @@ A lightweight web-based EPUB reader with **scroll navigation, page transitions, 
 - 📜 **Auto Page Switch** when reaching bottom/top
 - ⬆ **Previous Page** when reaching top
 - 🎯 **Mobile Optimized** for touch & gesture controls
-
----
 
 ## Installation 🛠️
 
@@ -26,37 +24,13 @@ A lightweight web-based EPUB reader with **scroll navigation, page transitions, 
 
 ### **2. Setup**
 ```sh
+cd /var/www
 git clone https://github.com/YOUR-USERNAME/epub-reader.git
 cd epub-reader
-```
-Ensure the `ebooks/` folder has correct permissions:
-```sh
-mkdir ebooks extracted
-chmod -R 777 ebooks extracted
 ```
 
 ### **3. Configure Web Server**
 Point your web server to the `epub-reader` directory.
-
-For **Apache**, modify `.htaccess`:
-```apache
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule . /index.php [L]
-</IfModule>
-```
-
-For **Nginx**, update your config:
-```nginx
-server {
-    location / {
-        index index.php;
-        try_files $uri $uri/ /index.php?$query_string;
-    }
-}
-```
 
 ### **4. Run the EPUB Reader**
 Simply open your browser and go to:
@@ -64,7 +38,6 @@ Simply open your browser and go to:
 http://your-server/epub-reader/index.php
 ```
 
----
 
 ## Usage 🚀
 
@@ -89,20 +62,9 @@ http://your-server/epub-reader/index.php
 - `NAV` button → Show/hide navigation buttons
 - `📚 MENU` → Return to index for ebook selection  
 
----
-
 ## Contributing 🤝
 Feel free to fork, submit PRs, or suggest improvements! 🚀
-
----
 
 ## License ⚖️
 MIT License - Free to use and modify.  
 
-
----
-
-This markdown file provides **installation steps, features, and usage details**.  
-You can paste it directly into `README.md` in your repository.
-
-Would you like any additional improvements? 😊📖

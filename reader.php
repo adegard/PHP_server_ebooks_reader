@@ -88,10 +88,7 @@ $content = file_get_contents($htmlFiles[$page]);
             transition: background 0.3s, color 0.3s;
             overflow: hidden; /* Prevent unwanted scrolling */
         }
-        .dark-mode {
-            background-color: black;
-            color: white;
-        }
+
         .book-container {
             max-width: 800px;
             margin: auto;
@@ -218,11 +215,6 @@ $content = file_get_contents($htmlFiles[$page]);
 		<button class="button-icon" onclick="setTheme('sepia-mode')">📜</button>
 
 		<button class="button-icon" onclick="readAloud()">🔊</button>
-<!--		<button class="button-icon" onclick="saveBookmark()">📌</button>
-		<button class="button-icon" onclick="loadBookmark()">📖</button>
-		<button class="button-icon" onclick="window.location.href='reader.php?file=<?php echo $file; ?>&page=<?php echo max($page - 1, 0); ?>'">⏪</button>
-		<button class="button-icon" onclick="window.location.href='reader.php?file=<?php echo $file; ?>&page=<?php echo min($page + 1, count($htmlFiles) - 1); ?>'">⏩</button>
--->
 		<button class="button-icon" id="increaseFont">➕</button>
 		<button class="button-icon" id="decreaseFont">➖</button>
 		<button class="button-icon" onclick="window.location.href='index_reader.php'">🏠</button>
@@ -263,20 +255,6 @@ $content = file_get_contents($htmlFiles[$page]);
 
 		document.addEventListener("DOMContentLoaded", updatePageProgress);
 
-
-
-		//Not used, but to keep:
-		/*
-		function saveBookmark() {
-			localStorage.setItem("bookmark", "<?php echo $page; ?>");
-		}
-
-		function loadBookmark() {
-			const savedPage = localStorage.getItem("bookmark") || "0";
-			window.location.href = "reader.php?file=<?php echo $file; ?>&page=" + savedPage;
-		}
-		*/
-		
 		
 		function readAloud() {
 			const text = document.getElementById("book-content").innerText;

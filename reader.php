@@ -42,14 +42,6 @@ if ($returnCode !== 0) {
     die("Failed to extract EPUB file! Error:\n" . implode("\n", $output));
 }
 
-// Search for content files (HTML, XHTML, HTM)
-/*
-$htmlFiles = glob("$bookFolder/{OEBPS,Text}/*.{html,xhtml,htm}", GLOB_BRACE);
-if (empty($htmlFiles)) {
-    $htmlFiles = glob("$bookFolder/*.{html,xhtml,htm}", GLOB_BRACE);
-}
-*/
-
 // Search for HTML files in multiple locations, including /text folder
 $htmlFiles = glob("$bookFolder/{OEBPS,Text,text}/*.{html,xhtml,htm}", GLOB_BRACE);
 if (empty($htmlFiles)) {
@@ -161,14 +153,7 @@ $content = file_get_contents($htmlFiles[$page]);
                 document.body.classList.add("dark-mode");
             }
         }
-/*
-        function scrollUp() {
-            document.getElementById('book-content').scrollBy({
-                top: -window.innerHeight*0.9,
-                behavior: 'smooth'
-            });
-        }
-*/
+
 		let topReached = false; // Track top state
 
 		function scrollUp() {
@@ -178,33 +163,13 @@ $content = file_get_contents($htmlFiles[$page]);
 				behavior: 'smooth'
 			});
 
-			setTimeout(() => {
-				if (bookContent.scrollTop <= 10) { // Small tolerance
-					topReached = true;
-				}
-			}, 500);
-		}
 
-		function prevPage() {
-			if (topReached) {
+			if (bookContent.scrollTop <= 10) { // Small tolerance
 				window.location.href = "reader.php?file=<?php echo $file; ?>&page=<?php echo max($page - 1, 0); ?>";
 			}
+
 		}
 
-/*
-        function scrollDown() {
-            let bookContent = document.getElementById('book-content');
-            bookContent.scrollBy({
-                top: window.innerHeight*0.9,
-                behavior: 'smooth'
-            });
-
-            // Check if reached bottom, then switch to next HTML file
-            let bottomReached = bookContent.scrollHeight - bookContent.scrollTop <= bookContent.clientHeight;
-            if (bottomReached) {
-                window.location.href = "reader.php?file=<?php echo $file; ?>&page=<?php echo min($page + 1, count($htmlFiles) - 1); ?>";
-            }
-        }
 
 		function scrollDown() {
 			let bookContent = document.getElementById('book-content');
@@ -213,39 +178,14 @@ $content = file_get_contents($htmlFiles[$page]);
 				behavior: 'smooth'
 			});
 
-			setTimeout(() => {
-				let tolerance = 20; // Allow a small buffer for mobile inconsistencies
-				let bottomReached = bookContent.scrollTop + bookContent.clientHeight >= bookContent.scrollHeight - tolerance;
 
-				if (bottomReached) {
-					window.location.href = "reader.php?file=<?php echo $file; ?>&page=<?php echo min($page + 1, count($htmlFiles) - 1); ?>";
-				}
-			}, 500); // Short delay to ensure scroll completes
-		}
-*/
-		let bottomReached = false; // Track bottom state
+			let tolerance = 10; // Add some buffer
+			let reachedBottom = bookContent.scrollTop + bookContent.clientHeight >= bookContent.scrollHeight + tolerance;
 
-		function scrollDown() {
-			let bookContent = document.getElementById('book-content');
-			bookContent.scrollBy({
-				top: window.innerHeight * 0.9,
-				behavior: 'smooth'
-			});
-
-			setTimeout(() => {
-				let tolerance = 20; // Add some buffer
-				let reachedBottom = bookContent.scrollTop + bookContent.clientHeight >= bookContent.scrollHeight - tolerance;
-
-				if (reachedBottom) {
-					bottomReached = true; // Mark that we're at the bottom
-				}
-			}, 500);
-		}
-
-		function nextPage() {
-			if (bottomReached) {
-				window.location.href = "reader.php?file=<?php echo $file; ?>&page=<?php echo min($page + 1, count($htmlFiles) - 1); ?>";
+			if (reachedBottom) {
+			window.location.href = "reader.php?file=<?php echo $file; ?>&page=<?php echo min($page + 1, count($htmlFiles) - 1); ?>";
 			}
+
 		}
 
 

@@ -208,7 +208,7 @@ $content = file_get_contents($htmlFiles[$page]);
 		<select id="toc-dropdown" onchange="jumpToChapter(this.value)">
 			<?php foreach ($htmlFiles as $index => $file) { ?>
 				<option value="<?php echo $index; ?>">
-					Chapter <?php echo $index + 1; ?>
+					Page <?php echo $index + 1; ?>
 				</option>
 			<?php } ?>
 		</select>
@@ -250,8 +250,6 @@ $content = file_get_contents($htmlFiles[$page]);
 		function jumpToChapter(pageIndex) {
 			window.location.href = "reader.php?file=" + "<?php echo urlencode($_SESSION['original_file']); ?>" + "&page=" + pageIndex;
 		}
-
-
 
 		// progress bar
 		function updatePageProgress() {

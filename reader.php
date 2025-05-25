@@ -199,6 +199,13 @@ $content = file_get_contents($htmlFiles[$page]);
 			padding: 5px;
 			border-radius: 5px;
 		}
+		/* fix dark mode */
+		@media (prefers-color-scheme: dark) {
+			body {
+				background: white !important;
+				color: black !important;
+			}
+		}
 
 		
     </style>
@@ -243,6 +250,17 @@ $content = file_get_contents($htmlFiles[$page]);
 
 
     <script>
+		
+		//fix dark mode (for browser forcing dark mode)
+		function fixDarkMode() {
+			const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+			if (prefersDark) {
+				document.body.classList.remove("dark-mode"); // Remove forced dark mode
+			}
+		}
+		document.addEventListener("DOMContentLoaded", fixDarkMode);
+
+
 		//table of content jumping
 		function jumpToChapter(pageIndex) {
 			window.location.href = "reader.php?file=" + "<?php echo urlencode($_SESSION['original_file']); ?>" + "&page=" + pageIndex;
@@ -272,16 +290,18 @@ $content = file_get_contents($htmlFiles[$page]);
 		function setTheme(theme) {
 			document.body.className = theme;
 			localStorage.setItem("theme", theme);
-			document.cookie = "theme=" + theme + "; path=/"; // Store theme in cookie
+			document.cookie = "theme=" + theme + "; path=/";
 		}
+
+
 
 
 		function applyTheme() {
-			const savedTheme = localStorage.getItem("theme") || "light-mode";
+			const savedTheme = localStorage.getItem("theme") || "light-mode"; 
 			document.body.className = savedTheme;
 		}
-
 		document.addEventListener("DOMContentLoaded", applyTheme);
+
 				
 
 		function scrollUp() {

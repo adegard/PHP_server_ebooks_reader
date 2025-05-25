@@ -199,13 +199,7 @@ $content = file_get_contents($htmlFiles[$page]);
 			padding: 5px;
 			border-radius: 5px;
 		}
-		/* fix dark mode */
-		@media (prefers-color-scheme: dark) {
-			body {
-				background: white !important;
-				color: black !important;
-			}
-		}
+
 
 		
     </style>
@@ -251,14 +245,6 @@ $content = file_get_contents($htmlFiles[$page]);
 
     <script>
 		
-		//fix dark mode (for browser forcing dark mode)
-		function fixDarkMode() {
-			const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-			if (prefersDark) {
-				document.body.classList.remove("dark-mode"); // Remove forced dark mode
-			}
-		}
-		document.addEventListener("DOMContentLoaded", fixDarkMode);
 
 
 		//table of content jumping

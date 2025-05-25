@@ -13,7 +13,9 @@ A lightweight web-based EPUB reader with **scroll navigation, page transitions, 
 - 🔍 **Font Size Adjustment** (+/- buttons)
 - 📜 **Auto Page Switch** when reaching bottom/top
 - ⬆ **Previous Page** when reaching top
-- 🎯 **Mobile Optimized** for touch & gesture controls
+- 🎯 **Mobile Optimized** for small screen & preventing bad gesture (to avoid selecting by better handing)
+
+![Screenshot](screen_reader.jpg?raw=true "Screenshot")
 
 ## Installation 🛠️
 

@@ -26,7 +26,7 @@ A lightweight web-based EPUB reader with **scroll navigation, page transitions, 
 
 ### **2. Setup**
 ```sh
-cd /var/www
+cd /var/www #or other place define in PHP config
 git clone https://github.com/YOUR-USERNAME/epub-reader.git
 cd epub-reader
 ```

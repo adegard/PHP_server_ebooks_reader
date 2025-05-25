@@ -247,10 +247,10 @@ $content = file_get_contents($htmlFiles[$page]);
 
     <script>
 		//table of content jumping
-		
 		function jumpToChapter(pageIndex) {
-			window.location.href = "reader.php?file=<?php echo $file; ?>&page=" + pageIndex;
+			window.location.href = "reader.php?file=" + "<?php echo urlencode($_SESSION['original_file']); ?>" + "&page=" + pageIndex;
 		}
+
 
 
 		// progress bar

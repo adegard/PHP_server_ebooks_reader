@@ -154,6 +154,7 @@ $content = file_get_contents($htmlFiles[$page]);
             }
         }
 
+/*
 		let topReached = false; // Track top state
 
 		function scrollUp() {
@@ -169,8 +170,23 @@ $content = file_get_contents($htmlFiles[$page]);
 			}
 
 		}
+*/
+		function scrollUp() {
+			let bookContent = document.getElementById('book-content');
 
+			if (bookContent.scrollTop > 10) {
+				// If there's space above, scroll up
+				bookContent.scrollBy({
+					top: -window.innerHeight * 0.9,
+					behavior: 'smooth'
+				});
+			} else {
+				// If at the top, switch to previous page
+				window.location.href = "reader.php?file=<?php echo $file; ?>&page=<?php echo max($page - 1, 0); ?>";
+			}
+		}
 
+/*
 		function scrollDown() {
 			let bookContent = document.getElementById('book-content');
 			bookContent.scrollBy({
@@ -179,15 +195,33 @@ $content = file_get_contents($htmlFiles[$page]);
 			});
 
 
-			let tolerance = 10; // Add some buffer
-			let reachedBottom = bookContent.scrollTop + bookContent.clientHeight >= bookContent.scrollHeight + tolerance;
+			let tolerance = 5; // Add some buffer
+			let reachedBottom = bookContent.scrollTop + bookContent.clientHeight >= bookContent.scrollHeight - tolerance;
 
 			if (reachedBottom) {
 			window.location.href = "reader.php?file=<?php echo $file; ?>&page=<?php echo min($page + 1, count($htmlFiles) - 1); ?>";
 			}
 
 		}
+*/
+		function scrollDown() {
+			let bookContent = document.getElementById('book-content');
 
+			// Get current scroll position
+			let maxScroll = bookContent.scrollHeight - bookContent.clientHeight;
+			let currentScroll = bookContent.scrollTop;
+
+			if (currentScroll < maxScroll - 10) {
+				// If there's more space to scroll, move down
+				bookContent.scrollBy({
+					top: window.innerHeight * 0.9,
+					behavior: 'smooth'
+				});
+			} else {
+				// If already at bottom, switch to next page
+				window.location.href = "reader.php?file=<?php echo $file; ?>&page=<?php echo min($page + 1, count($htmlFiles) - 1); ?>";
+			}
+		}
 
         //font size
             const increaseFontButton = document.getElementById("increaseFont");

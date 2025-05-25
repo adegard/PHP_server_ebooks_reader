@@ -15,6 +15,11 @@ if (isset($_GET['file'])) {
 // Retrieve the correct file for reading
 $file = isset($_SESSION['original_file']) ? $_SESSION['original_file'] : '';
 
+//retrieve the correct theme
+$theme = isset($_COOKIE['theme']) ? $_COOKIE['theme'] : 'light-mode';
+echo "<body class='$theme' onload='applyTheme();'>";
+
+
 if (!$file) {
     die("No file selected!");
 }
@@ -263,10 +268,13 @@ $content = file_get_contents($htmlFiles[$page]);
 			window.speechSynthesis.speak(speech);
 		}
 
+
 		function setTheme(theme) {
 			document.body.className = theme;
 			localStorage.setItem("theme", theme);
+			document.cookie = "theme=" + theme + "; path=/"; // Store theme in cookie
 		}
+
 
 		function applyTheme() {
 			const savedTheme = localStorage.getItem("theme") || "light-mode";
@@ -306,25 +314,25 @@ $content = file_get_contents($htmlFiles[$page]);
 		}
 
         //font size
-            const increaseFontButton = document.getElementById("increaseFont");
-			const decreaseFontButton = document.getElementById("decreaseFont");
-			const readerContent = document.getElementById("book-content"); // Change from "reader" to "book-content"
+		const increaseFontButton = document.getElementById("increaseFont");
+		const decreaseFontButton = document.getElementById("decreaseFont");
+		const readerContent = document.getElementById("book-content"); // Change from "reader" to "book-content"
 
-			// Load stored font size or set default
-			let fontSize = localStorage.getItem("fontSize") ? parseInt(localStorage.getItem("fontSize")) : 16;
+		// Load stored font size or set default
+		let fontSize = localStorage.getItem("fontSize") ? parseInt(localStorage.getItem("fontSize")) : 16;
+		readerContent.style.fontSize = fontSize + "px";
+
+		increaseFontButton.addEventListener("click", () => {
+			fontSize += 2;
 			readerContent.style.fontSize = fontSize + "px";
+			localStorage.setItem("fontSize", fontSize); // Save preference
+		});
 
-			increaseFontButton.addEventListener("click", () => {
-				fontSize += 2;
-				readerContent.style.fontSize = fontSize + "px";
-				localStorage.setItem("fontSize", fontSize); // Save preference
-			});
-
-			decreaseFontButton.addEventListener("click", () => {
-				fontSize -= 2;
-				readerContent.style.fontSize = fontSize + "px";
-				localStorage.setItem("fontSize", fontSize); // Save preference
-			});
+		decreaseFontButton.addEventListener("click", () => {
+			fontSize -= 2;
+			readerContent.style.fontSize = fontSize + "px";
+			localStorage.setItem("fontSize", fontSize); // Save preference
+		});
 			
 
     </script>

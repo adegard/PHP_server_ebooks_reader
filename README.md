@@ -1,9 +1,7 @@
 
-### **README.md**
+# EPUB Web server Reader 📖
 
-# EPUB Web Reader 📖
-
-A lightweight web-based EPUB reader with **scroll navigation, page transitions, dark mode, and font size adjustments**. Designed for a seamless e-reader experience directly in a browser.
+A lightweight web-based EPUB reader with **scroll navigation, page transitions, dark mode, and font size adjustments...**. Designed for a seamless e-reader experience directly in a browser, installed on a Raspebeery PI or other arm home-server.
 
 ## Features ✨
 - 📚 **Upload & Delete EPUBs** from the server (`index_reader.php`) from /ebooks sub-folder (usually in /var/www)
@@ -14,6 +12,7 @@ A lightweight web-based EPUB reader with **scroll navigation, page transitions, 
 - 📜 **Auto Page Switch** when reaching bottom/top
 - ⬆ **Previous Page** when reaching top
 - 🎯 **Mobile Optimized** for small screen & preventing bad gesture (to avoid selecting by better handing)
+- ...
 
 ![Screenshot](screen_reader.jpg?raw=true "Screenshot")
 

@@ -198,7 +198,7 @@ $content = file_get_contents($htmlFiles[$page]);
 		
     </style>
 </head>
-<body onload="applyTheme(); toggleScrolling()">
+<body onload="applyTheme();">
 
 	<div class="top-buttons">
 	

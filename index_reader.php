@@ -1,5 +1,8 @@
 <?php
 session_start();
+
+unset($_SESSION['original_file']); // Reset file tracking
+
 $ebookFolder = 'ebooks/';
 
 // Handle File Upload

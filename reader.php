@@ -4,8 +4,16 @@ session_start();
 $ebookFolder = 'ebooks/';
 $extractPath = 'ebooks/extracted/';
 
-$file = isset($_GET['file']) ? $_GET['file'] : '';
-$page = isset($_GET['page']) ? $_GET['page'] : 0;
+
+$page = isset($_GET['page']) ? intval($_GET['page']) : 0;
+
+// Reset stored file when a new book is loaded
+if (isset($_GET['file'])) {
+    $_SESSION['original_file'] = $_GET['file']; // Store new file
+}
+
+// Retrieve the correct file for reading
+$file = isset($_SESSION['original_file']) ? $_SESSION['original_file'] : '';
 
 if (!$file) {
     die("No file selected!");
@@ -64,6 +72,7 @@ if (!isset($htmlFiles[$page])) {
 $_SESSION['last_page'] = $page;
 $content = file_get_contents($htmlFiles[$page]);
 
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -90,7 +99,7 @@ $content = file_get_contents($htmlFiles[$page]);
             border: 1px solid #ddd;
             text-align: justify; /* Justify text */
             line-height: 1.6;
-            margin-top: 85px;  /* Push content below toolbar */
+            margin-top: 80px;  /* Push content below toolbar */
             height: 90vh; /* Keep container viewable within screen */
             overflow: hidden; 
             /* overflow-y: auto; Enable natural scrolling */
@@ -105,7 +114,7 @@ $content = file_get_contents($htmlFiles[$page]);
             padding: 0 10px;
         }
         .nav-button {
-            padding: 15px;
+            padding: 20px;
             font-size: 22px;
             background-color: rgba(0, 0, 0, 0.5);
             color: white;
@@ -138,21 +147,21 @@ $content = file_get_contents($htmlFiles[$page]);
 			width: 100%;
 			background-color: rgba(0, 0, 0, 0.8);
 			z-index: 1000;
-			height: 60px;
+			height: 45px; /* 60px; */
 			align-items: center;
 		}
 
 		.button-icon {
-			padding: 15px;
-			font-size: 24px;
+			padding: 10px; /* 15px */
+			font-size: 20px; /* Slightly smaller icons, was 22 */
 			background-color: transparent;
 			color: white;
 			border-radius: 50%;
 			cursor: pointer;
 			text-decoration: none;
 			border: none;
-			width: 50px;
-			height: 50px;
+			width: 40px; /* 50px; */
+			height: 40px; /* 50px; */
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -182,9 +191,9 @@ $content = file_get_contents($htmlFiles[$page]);
 			position: fixed;
 			bottom: 8px;
 			right: 20px;
-			font-size: 14px;
+			font-size: 8px;
 			color: white;
-			background: rgba(0, 0, 0, 0.7);
+			background: rgba(0, 0, 0, 0.6);
 			padding: 5px;
 			border-radius: 5px;
 		}
@@ -193,9 +202,17 @@ $content = file_get_contents($htmlFiles[$page]);
     </style>
 </head>
 <body onload="applyTheme(); toggleScrolling()">
-<!--applyDarkModePreference(); -->
 
 	<div class="top-buttons">
+	
+		<select id="toc-dropdown" onchange="jumpToChapter(this.value)">
+			<?php foreach ($htmlFiles as $index => $file) { ?>
+				<option value="<?php echo $index; ?>">
+					Chapter <?php echo $index + 1; ?>
+				</option>
+			<?php } ?>
+		</select>
+
 		<button class="button-icon" onclick="setTheme('light-mode')">🎨</button>
 		<button class="button-icon" onclick="setTheme('dark-mode')">🌙</button>
 		<button class="button-icon" onclick="setTheme('sepia-mode')">📜</button>
@@ -225,19 +242,18 @@ $content = file_get_contents($htmlFiles[$page]);
 		<div class="progress-bar" id="progress-bar"></div>
 	</div>
 
-	<!--<div class="page-counter" id="page-counter"></div>-->
+	<div class="page-counter" id="page-counter"></div>
 
 
     <script>
-		/*
-		function updateProgress() {
-			let bookContent = document.getElementById("book-content");
-			let progress = (bookContent.scrollTop / (bookContent.scrollHeight - bookContent.clientHeight)) * 100;
-			document.getElementById("progress-bar").style.width = progress + "%";
+		//table of content jumping
+		
+		function jumpToChapter(pageIndex) {
+			window.location.href = "reader.php?file=<?php echo $file; ?>&page=" + pageIndex;
 		}
 
-		document.getElementById("book-content").addEventListener("scroll", updateProgress);
-		*/
+
+		// progress bar
 		function updatePageProgress() {
 			let currentPage = <?php echo $page; ?> + 1;
 			let totalPages = <?php echo count($htmlFiles); ?>;
@@ -251,7 +267,7 @@ $content = file_get_contents($htmlFiles[$page]);
 
 
 
-		//Not used:
+		//Not used, but to keep:
 		/*
 		function saveBookmark() {
 			localStorage.setItem("bookmark", "<?php echo $page; ?>");
@@ -262,6 +278,7 @@ $content = file_get_contents($htmlFiles[$page]);
 			window.location.href = "reader.php?file=<?php echo $file; ?>&page=" + savedPage;
 		}
 		*/
+		
 		
 		function readAloud() {
 			const text = document.getElementById("book-content").innerText;
@@ -281,55 +298,34 @@ $content = file_get_contents($htmlFiles[$page]);
 		}
 
 		document.addEventListener("DOMContentLoaded", applyTheme);
-
-
-        // Toggle Invert Colors & Save Preference
-        /*
-        function toggleDarkMode() {
-            document.body.classList.toggle("dark-mode");
-            localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
-        }
-
-        // Apply Dark Mode Preference
-        function applyDarkModePreference() {
-            if (localStorage.getItem("darkMode") === "true") {
-                document.body.classList.add("dark-mode");
-            }
-        }
-		*/
+				
 
 		function scrollUp() {
 			let bookContent = document.getElementById('book-content');
 
 			if (bookContent.scrollTop > 10) {
-				// If there's space above, scroll up
 				bookContent.scrollBy({
 					top: -window.innerHeight * 0.9,
 					behavior: 'smooth'
 				});
 			} else {
-				// If at the top, switch to previous page
-				window.location.href = "reader.php?file=<?php echo $file; ?>&page=<?php echo max($page - 1, 0); ?>";
+				window.location.href = "reader.php?file=" + "<?php echo urlencode($_SESSION['original_file']); ?>" + "&page=<?php echo max($page - 1, 0); ?>";
 			}
 		}
 
-
 		function scrollDown() {
 			let bookContent = document.getElementById('book-content');
-
-			// Get current scroll position
 			let maxScroll = bookContent.scrollHeight - bookContent.clientHeight;
 			let currentScroll = bookContent.scrollTop;
 
 			if (currentScroll < maxScroll - 10) {
-				// If there's more space to scroll, move down
 				bookContent.scrollBy({
 					top: window.innerHeight * 0.9,
 					behavior: 'smooth'
 				});
 			} else {
-				// If already at bottom, switch to next page
-				window.location.href = "reader.php?file=<?php echo $file; ?>&page=<?php echo min($page + 1, count($htmlFiles) - 1); ?>";
+				// Use the correct stored filename for navigation
+				window.location.href = "reader.php?file=" + "<?php echo urlencode($_SESSION['original_file']); ?>" + "&page=<?php echo min($page + 1, count($htmlFiles) - 1); ?>";
 			}
 		}
 
@@ -354,18 +350,6 @@ $content = file_get_contents($htmlFiles[$page]);
 				localStorage.setItem("fontSize", fontSize); // Save preference
 			});
 			
-			//toggle buttons next yes/no
-			const toggleNavButton = document.getElementById("toggleNavButtons");
-			const navButtons = document.querySelector(".nav-buttons");
-
-			toggleNavButton.addEventListener("click", () => {
-				if (navButtons.style.display === "none") {
-					navButtons.style.display = "flex"; // Show overlay buttons
-				} else {
-					navButtons.style.display = "none"; // Hide overlay buttons
-				}
-			});
-	
 
     </script>
 

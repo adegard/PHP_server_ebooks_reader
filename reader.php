@@ -58,6 +58,24 @@ if ($returnCode !== 0) {
 }
 
 // Search for HTML files in multiple locations, including /text folder
+// Search inside OEBPS, Text, or text folders (including subdirectories)
+$htmlFiles = glob("$bookFolder/{OEBPS,Text,text}/**/*.{html,xhtml,htm}", GLOB_BRACE);
+
+// If no files are found, check directly inside all subdirectories
+if (empty($htmlFiles)) {
+    $htmlFiles = glob("$bookFolder/**/*.{html,xhtml,htm}", GLOB_BRACE);
+}
+
+// If still empty, check the root folder of the extracted EPUB
+if (empty($htmlFiles)) {
+    $htmlFiles = glob("$bookFolder/*.{html,xhtml,htm}", GLOB_BRACE);
+}
+
+if (empty($htmlFiles)) {
+    die("No readable HTML content found");
+}
+
+/*
 $htmlFiles = glob("$bookFolder/{OEBPS,Text,text}/*.{html,xhtml,htm}", GLOB_BRACE);
 if (empty($htmlFiles)) {
     $htmlFiles = glob("$bookFolder/*.{html,xhtml,htm}", GLOB_BRACE);
@@ -66,6 +84,7 @@ if (empty($htmlFiles)) {
 if (empty($htmlFiles)) {
     die("No readable HTML content found in EPUB!");
 }
+*/
 
 // Sort files in natural order
 natsort($htmlFiles);

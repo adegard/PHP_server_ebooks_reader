@@ -79,6 +79,8 @@ if (!isset($htmlFiles[$page])) {
 $_SESSION['last_page'] = $page;
 $content = file_get_contents($htmlFiles[$page]);
 
+// Store last read page for this book
+$_SESSION["bookmark_$file"] = $page;
 
 ?>
 <!DOCTYPE html>
@@ -215,7 +217,7 @@ $content = file_get_contents($htmlFiles[$page]);
 		<select id="toc-dropdown" onchange="jumpToChapter(this.value)">
 			<?php foreach ($htmlFiles as $index => $file) { ?>
 				<option value="<?php echo $index; ?>">
-					<?php echo $index + 1; ?>
+					Pag.<?php echo $index + 1; ?>
 				</option>
 			<?php } ?>
 		</select>
@@ -223,9 +225,7 @@ $content = file_get_contents($htmlFiles[$page]);
 		<button class="button-icon" onclick="setTheme('light-mode')">🎨</button>
 		<button class="button-icon" onclick="setTheme('dark-mode')">🌙</button>
 		<button class="button-icon" onclick="setTheme('sepia-mode')">📜</button>
-		<button class="button-icon" onclick="saveBookmark()">📌</button>
-		<button class="button-icon" onclick="loadBookmark()">📖</button>
-	<!--	<button class="button-icon" onclick="readAloud()">🔊</button>-->
+		<button class="button-icon" onclick="readAloud()">🔊</button>-
 		<button class="button-icon" id="increaseFont">➕</button>
 		<button class="button-icon" id="decreaseFont">➖</button>
 		<button class="button-icon" onclick="window.location.href='index_reader.php'">🏠</button>
@@ -249,7 +249,7 @@ $content = file_get_contents($htmlFiles[$page]);
 
 
     <script>
-		
+		//no more used
 		function saveBookmark() {
 			let currentPage = <?php echo $page; ?>;
 			let bookTitle = "<?php echo urlencode($_SESSION['original_file']); ?>";

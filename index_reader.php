@@ -32,6 +32,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete_file"])) {
 
 // Get available EPUB files
 $files = glob($ebookFolder . '*.epub');
+
+
+// Get bookmarks
+$books = glob("$ebookFolder/*.epub");
+
+echo "<h2>Select a bookmark</h2>";
+
+foreach ($books as $book) {
+    $bookTitle = basename($book);
+    $savedPage = isset($_SESSION["bookmark_$bookTitle"]) ? $_SESSION["bookmark_$bookTitle"] : 0;
+
+    echo "<p>
+        <a href='reader.php?file=" . urlencode($bookTitle) . "&page=$savedPage'>
+            📖 $bookTitle (Last Page: $savedPage)
+        </a>
+    </p>";
+}
+
 ?>
 
 <!DOCTYPE html>

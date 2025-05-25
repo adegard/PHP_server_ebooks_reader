@@ -1,6 +1,3 @@
-Sure! Here's a **README.md** file in markdown format that explains your EPUB reader scripts and provides installation instructions.
-
----
 
 ### **README.md**
 
@@ -9,7 +6,7 @@ Sure! Here's a **README.md** file in markdown format that explains your EPUB rea
 A lightweight web-based EPUB reader with **scroll navigation, page transitions, dark mode, and font size adjustments**. Designed for a seamless e-reader experience directly in a browser.
 
 ## Features ✨
-- 📚 **Upload & Delete EPUBs** from the server (`index.php`)
+- 📚 **Upload & Delete EPUBs** from the server (`index_reader.php`)
 - 📖 **Read EPUBs** in the browser (`reader.php`)
 - 🔄 **Navigation Buttons** to scroll **page by page**
 - 🌙 **Dark Mode** toggle (saves preference)

@@ -90,7 +90,7 @@ $content = file_get_contents($htmlFiles[$page]);
             border: 1px solid #ddd;
             text-align: justify; /* Justify text */
             line-height: 1.6;
-            margin-top: 80px;  /* Push content below toolbar */
+            margin-top: 85px;  /* Push content below toolbar */
             height: 90vh; /* Keep container viewable within screen */
             overflow: hidden; 
             /* overflow-y: auto; Enable natural scrolling */
@@ -105,7 +105,7 @@ $content = file_get_contents($htmlFiles[$page]);
             padding: 0 10px;
         }
         .nav-button {
-            padding: 20px;
+            padding: 15px;
             font-size: 22px;
             background-color: rgba(0, 0, 0, 0.5);
             color: white;
@@ -162,8 +162,34 @@ $content = file_get_contents($htmlFiles[$page]);
 		.button-icon:hover {
 			background-color: rgba(255, 255, 255, 0.2);
 		}
+		
+		.progress-container {
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+			height: 6px;
+			background: #ccc;
+		}
 
+		.progress-bar {
+			height: 100%;
+			width: 0%;
+			background: #4CAF50;
+			transition: width 0.3s;
+		}
 
+		.page-counter {
+			position: fixed;
+			bottom: 8px;
+			right: 20px;
+			font-size: 14px;
+			color: white;
+			background: rgba(0, 0, 0, 0.7);
+			padding: 5px;
+			border-radius: 5px;
+		}
+
+		
     </style>
 </head>
 <body onload="applyTheme(); toggleScrolling()">
@@ -194,9 +220,39 @@ $content = file_get_contents($htmlFiles[$page]);
         <button class="nav-button" onclick="scrollUp()">⬅</button>
         <button class="nav-button" onclick="scrollDown()">➡</button>
     </div>
+    
+    <div class="progress-container">
+		<div class="progress-bar" id="progress-bar"></div>
+	</div>
+
+	<!--<div class="page-counter" id="page-counter"></div>-->
+
 
     <script>
-		
+		/*
+		function updateProgress() {
+			let bookContent = document.getElementById("book-content");
+			let progress = (bookContent.scrollTop / (bookContent.scrollHeight - bookContent.clientHeight)) * 100;
+			document.getElementById("progress-bar").style.width = progress + "%";
+		}
+
+		document.getElementById("book-content").addEventListener("scroll", updateProgress);
+		*/
+		function updatePageProgress() {
+			let currentPage = <?php echo $page; ?> + 1;
+			let totalPages = <?php echo count($htmlFiles); ?>;
+			let progress = (currentPage / totalPages) * 100;
+
+			document.getElementById("progress-bar").style.width = progress + "%";
+			document.getElementById("page-counter").innerText = `📖 Page ${currentPage} / ${totalPages}`;
+		}
+
+		document.addEventListener("DOMContentLoaded", updatePageProgress);
+
+
+
+		//Not used:
+		/*
 		function saveBookmark() {
 			localStorage.setItem("bookmark", "<?php echo $page; ?>");
 		}
@@ -205,7 +261,8 @@ $content = file_get_contents($htmlFiles[$page]);
 			const savedPage = localStorage.getItem("bookmark") || "0";
 			window.location.href = "reader.php?file=<?php echo $file; ?>&page=" + savedPage;
 		}
-
+		*/
+		
 		function readAloud() {
 			const text = document.getElementById("book-content").innerText;
 			const speech = new SpeechSynthesisUtterance(text);

@@ -37,7 +37,7 @@ Point your web server to the `epub-reader` directory.
 ### **4. Run the EPUB Reader**
 Simply open your browser and go to:
 ```
-http://your-server/epub-reader/index.php
+http://your-server/epub-reader/index_reader.php
 ```
 
 

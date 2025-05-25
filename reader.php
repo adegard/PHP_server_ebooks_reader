@@ -90,6 +90,7 @@ $content = file_get_contents($htmlFiles[$page]);
             border: 1px solid #ddd;
             text-align: justify; /* Justify text */
             line-height: 1.6;
+            margin-top: 80px;  /* Push content below toolbar */
             height: 90vh; /* Keep container viewable within screen */
             overflow: hidden; 
             /* overflow-y: auto; Enable natural scrolling */
@@ -121,15 +122,69 @@ $content = file_get_contents($htmlFiles[$page]);
         .nav-button:hover {
             background-color: rgba(0, 0, 0, 0.8);
         }
+        
+        .light-mode { background: white; color: black; }
+		.dark-mode { background: black; color: white; }
+		.sepia-mode { background: #f4ecd8; color: #5f4b32; }
+		
+		/* menu icons */
+		.top-buttons {
+			display: flex;
+			justify-content: center;
+			gap: 10px;
+			padding: 10px;
+			position: fixed;
+			top: 0;
+			width: 100%;
+			background-color: rgba(0, 0, 0, 0.8);
+			z-index: 1000;
+			height: 60px;
+			align-items: center;
+		}
+
+		.button-icon {
+			padding: 15px;
+			font-size: 24px;
+			background-color: transparent;
+			color: white;
+			border-radius: 50%;
+			cursor: pointer;
+			text-decoration: none;
+			border: none;
+			width: 50px;
+			height: 50px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: background 0.3s;
+		}
+
+		.button-icon:hover {
+			background-color: rgba(255, 255, 255, 0.2);
+		}
+
+
     </style>
 </head>
-<body onload="applyDarkModePreference(); toggleScrolling()">
+<body onload="applyTheme(); toggleScrolling()">
+<!--applyDarkModePreference(); -->
 
-    <button onclick="toggleDarkMode()">DARK</button>
-    <button id="increaseFont">+Incr.</button>
-	<button id="decreaseFont">-Decr.</button>
-	<button id="toggleNavButtons">NAV</button>
-    <button onclick="window.location.href='index_reader.php'" class="top-button">📚 MENU</button>
+	<div class="top-buttons">
+		<button class="button-icon" onclick="setTheme('light-mode')">🎨</button>
+		<button class="button-icon" onclick="setTheme('dark-mode')">🌙</button>
+		<button class="button-icon" onclick="setTheme('sepia-mode')">📜</button>
+
+		<button class="button-icon" onclick="readAloud()">🔊</button>
+<!--		<button class="button-icon" onclick="saveBookmark()">📌</button>
+		<button class="button-icon" onclick="loadBookmark()">📖</button>
+		<button class="button-icon" onclick="window.location.href='reader.php?file=<?php echo $file; ?>&page=<?php echo max($page - 1, 0); ?>'">⏪</button>
+		<button class="button-icon" onclick="window.location.href='reader.php?file=<?php echo $file; ?>&page=<?php echo min($page + 1, count($htmlFiles) - 1); ?>'">⏩</button>
+-->
+		<button class="button-icon" id="increaseFont">➕</button>
+		<button class="button-icon" id="decreaseFont">➖</button>
+		<button class="button-icon" onclick="window.location.href='index_reader.php'">🏠</button>
+	</div>
+
 	    
     <div class="book-container" id="book-content">
         <?php echo $content; ?>
@@ -141,7 +196,38 @@ $content = file_get_contents($htmlFiles[$page]);
     </div>
 
     <script>
+		
+		function saveBookmark() {
+			localStorage.setItem("bookmark", "<?php echo $page; ?>");
+		}
+
+		function loadBookmark() {
+			const savedPage = localStorage.getItem("bookmark") || "0";
+			window.location.href = "reader.php?file=<?php echo $file; ?>&page=" + savedPage;
+		}
+
+		function readAloud() {
+			const text = document.getElementById("book-content").innerText;
+			const speech = new SpeechSynthesisUtterance(text);
+			speech.lang = "en-US";
+			window.speechSynthesis.speak(speech);
+		}
+
+		function setTheme(theme) {
+			document.body.className = theme;
+			localStorage.setItem("theme", theme);
+		}
+
+		function applyTheme() {
+			const savedTheme = localStorage.getItem("theme") || "light-mode";
+			document.body.className = savedTheme;
+		}
+
+		document.addEventListener("DOMContentLoaded", applyTheme);
+
+
         // Toggle Invert Colors & Save Preference
+        /*
         function toggleDarkMode() {
             document.body.classList.toggle("dark-mode");
             localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
@@ -153,24 +239,8 @@ $content = file_get_contents($htmlFiles[$page]);
                 document.body.classList.add("dark-mode");
             }
         }
+		*/
 
-/*
-		let topReached = false; // Track top state
-
-		function scrollUp() {
-			let bookContent = document.getElementById('book-content');
-			bookContent.scrollBy({
-				top: -window.innerHeight * 0.9,
-				behavior: 'smooth'
-			});
-
-
-			if (bookContent.scrollTop <= 10) { // Small tolerance
-				window.location.href = "reader.php?file=<?php echo $file; ?>&page=<?php echo max($page - 1, 0); ?>";
-			}
-
-		}
-*/
 		function scrollUp() {
 			let bookContent = document.getElementById('book-content');
 
@@ -186,24 +256,7 @@ $content = file_get_contents($htmlFiles[$page]);
 			}
 		}
 
-/*
-		function scrollDown() {
-			let bookContent = document.getElementById('book-content');
-			bookContent.scrollBy({
-				top: window.innerHeight * 0.9,
-				behavior: 'smooth'
-			});
 
-
-			let tolerance = 5; // Add some buffer
-			let reachedBottom = bookContent.scrollTop + bookContent.clientHeight >= bookContent.scrollHeight - tolerance;
-
-			if (reachedBottom) {
-			window.location.href = "reader.php?file=<?php echo $file; ?>&page=<?php echo min($page + 1, count($htmlFiles) - 1); ?>";
-			}
-
-		}
-*/
 		function scrollDown() {
 			let bookContent = document.getElementById('book-content');
 

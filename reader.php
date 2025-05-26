@@ -75,16 +75,6 @@ if (empty($htmlFiles)) {
     die("No readable HTML content found");
 }
 
-/*
-$htmlFiles = glob("$bookFolder/{OEBPS,Text,text}/*.{html,xhtml,htm}", GLOB_BRACE);
-if (empty($htmlFiles)) {
-    $htmlFiles = glob("$bookFolder/*.{html,xhtml,htm}", GLOB_BRACE);
-}
-
-if (empty($htmlFiles)) {
-    die("No readable HTML content found in EPUB!");
-}
-*/
 
 // Sort files in natural order
 natsort($htmlFiles);
@@ -136,12 +126,12 @@ $_SESSION["bookmark_$file"] = $page;
             width: 100%;
             display: flex;
             justify-content: space-between;
-            padding: 0 10px;
+            padding: 0 -5px;
         }
         .nav-button {
             padding: 20px;
             font-size: 22px;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.3);
             color: white;
             border-radius: 50%;
             cursor: pointer;
@@ -218,7 +208,7 @@ $_SESSION["bookmark_$file"] = $page;
 			right: 20px;
 			font-size: 8px;
 			color: white;
-			background: rgba(0, 0, 0, 0.6);
+			background: rgba(0, 0, 0, 0.4);
 			padding: 5px;
 			border-radius: 5px;
 		}
@@ -301,7 +291,7 @@ $_SESSION["bookmark_$file"] = $page;
 			let progress = (currentPage / totalPages) * 100;
 
 			document.getElementById("progress-bar").style.width = progress + "%";
-			document.getElementById("page-counter").innerText = `📖 Page ${currentPage} / ${totalPages}`;
+			document.getElementById("page-counter").innerText = `📖 ${currentPage} / ${totalPages}`;
 		}
 
 		document.addEventListener("DOMContentLoaded", updatePageProgress);

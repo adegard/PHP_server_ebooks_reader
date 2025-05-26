@@ -88,9 +88,6 @@ if (!isset($htmlFiles[$page])) {
 $_SESSION['last_page'] = $page;
 $content = file_get_contents($htmlFiles[$page]);
 
-// Store last read page for this book
-//$_SESSION["bookmark_$file"] = $page;
-
 // Automatically store bookmark for this book
 $_SESSION["bookmark_$file"] = json_encode([
     'page' => $page,
@@ -125,6 +122,10 @@ $_SESSION["bookmark_$file"] = json_encode([
             height: 90vh; /* Keep container viewable within screen */
             overflow: hidden; 
             /* overflow-y: auto; Enable natural scrolling */
+            user-select: none; /* Prevent text selection */
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
         }
         .nav-buttons {
             position: fixed;
@@ -280,14 +281,7 @@ $_SESSION["bookmark_$file"] = json_encode([
 		window.addEventListener("beforeunload", storeScrollPosition);
 		document.getElementById("book-content").addEventListener("scroll", storeScrollPosition);
 
-		/*
-		function saveBookmark() {
-			let currentPage = <?php echo $page; ?>;
-			let bookTitle = "<?php echo urlencode($_SESSION['original_file']); ?>";
-			localStorage.setItem("bookmark_" + bookTitle, currentPage);
-			alert("📌 Bookmark saved!");
-		}
-		*/
+
 		function saveBookmark() {
 			let currentPage = <?php echo $page; ?>;
 			let bookTitle = "<?php echo urlencode($_SESSION['original_file']); ?>";
@@ -297,18 +291,7 @@ $_SESSION["bookmark_$file"] = json_encode([
 			alert("📌 Bookmark saved!");
 		}
 
-		/*
-		function loadBookmark() {
-			let bookTitle = "<?php echo urlencode($_SESSION['original_file']); ?>";
-			let savedPage = localStorage.getItem("bookmark_" + bookTitle);
 
-			if (savedPage !== null) {
-				window.location.href = "reader.php?file=" + bookTitle + "&page=" + savedPage;
-			} else {
-				alert("❌ No bookmark found!");
-			}
-		}
-		*/
 		function loadBookmark() {
 			let bookTitle = "<?php echo urlencode($_SESSION['original_file']); ?>";
 			let savedBookmark = localStorage.getItem("bookmark_" + bookTitle);

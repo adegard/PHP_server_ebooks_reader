@@ -38,7 +38,7 @@ $files = glob($ebookFolder . '*.epub');
 $books = glob("$ebookFolder/*.epub");
 
 echo "<h2>Select a bookmark</h2>";
-
+/*
 foreach ($books as $book) {
     $bookTitle = basename($book);
     $savedPage = isset($_SESSION["bookmark_$bookTitle"]) ? $_SESSION["bookmark_$bookTitle"] : 0;
@@ -49,7 +49,28 @@ foreach ($books as $book) {
         </a>
     </p>";
 }
+*/
 
+
+foreach ($books as $book) {
+    $bookTitle = basename($book);
+    $savedBookmark = isset($_SESSION["bookmark_$bookTitle"]) ? $_SESSION["bookmark_$bookTitle"] : null;
+
+    if ($savedBookmark) {
+        $bookmarkData = json_decode($savedBookmark, true);
+        $lastPage = $bookmarkData['page'];
+        $scrollPosition = $bookmarkData['scroll'];
+    } else {
+        $lastPage = 0; // Default to first page if no bookmark exists
+        $scrollPosition = 0;
+    }
+
+    echo "<p>
+        <a href='reader.php?file=" . urlencode($bookTitle) . "&page=$lastPage&scroll=$scrollPosition'>
+            📖 $bookTitle (Last Page: $lastPage, Scroll: $scrollPosition)
+        </a>
+    </p>";
+}
 ?>
 
 <!DOCTYPE html>

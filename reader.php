@@ -89,7 +89,14 @@ $_SESSION['last_page'] = $page;
 $content = file_get_contents($htmlFiles[$page]);
 
 // Store last read page for this book
-$_SESSION["bookmark_$file"] = $page;
+//$_SESSION["bookmark_$file"] = $page;
+
+// Automatically store bookmark for this book
+$_SESSION["bookmark_$file"] = json_encode([
+    'page' => $page,
+    'scroll' => $_GET['scroll'] ?? $_POST['scroll'] ?? $_SESSION["bookmark_$file"]['scroll'] ?? 0
+]);
+
 
 ?>
 <!DOCTYPE html>
@@ -258,14 +265,39 @@ $_SESSION["bookmark_$file"] = $page;
 
 
     <script>
-		//no more used
+		function storeScrollPosition() {
+			let bookTitle = "<?php echo urlencode($_SESSION['original_file']); ?>";
+			let currentScroll = document.getElementById("book-content").scrollTop;
+
+			let bookmarkData = localStorage.getItem("bookmark_" + bookTitle);
+			bookmarkData = bookmarkData ? JSON.parse(bookmarkData) : { page: <?php echo $page; ?>, scroll: 0 };
+
+			bookmarkData.scroll = currentScroll; // Store updated scroll position
+			localStorage.setItem("bookmark_" + bookTitle, JSON.stringify(bookmarkData));
+		}
+
+		// Save scroll position before leaving the page
+		window.addEventListener("beforeunload", storeScrollPosition);
+		document.getElementById("book-content").addEventListener("scroll", storeScrollPosition);
+
+		/*
 		function saveBookmark() {
 			let currentPage = <?php echo $page; ?>;
 			let bookTitle = "<?php echo urlencode($_SESSION['original_file']); ?>";
 			localStorage.setItem("bookmark_" + bookTitle, currentPage);
 			alert("📌 Bookmark saved!");
 		}
-		
+		*/
+		function saveBookmark() {
+			let currentPage = <?php echo $page; ?>;
+			let bookTitle = "<?php echo urlencode($_SESSION['original_file']); ?>";
+			let scrollY = document.getElementById("book-content").scrollTop;
+
+			localStorage.setItem("bookmark_" + bookTitle, JSON.stringify({ page: currentPage, scroll: scrollY }));
+			alert("📌 Bookmark saved!");
+		}
+
+		/*
 		function loadBookmark() {
 			let bookTitle = "<?php echo urlencode($_SESSION['original_file']); ?>";
 			let savedPage = localStorage.getItem("bookmark_" + bookTitle);
@@ -276,6 +308,30 @@ $_SESSION["bookmark_$file"] = $page;
 				alert("❌ No bookmark found!");
 			}
 		}
+		*/
+		function loadBookmark() {
+			let bookTitle = "<?php echo urlencode($_SESSION['original_file']); ?>";
+			let savedBookmark = localStorage.getItem("bookmark_" + bookTitle);
+
+			if (savedBookmark) {
+				let bookmarkData = JSON.parse(savedBookmark);
+				window.location.href = "reader.php?file=" + bookTitle + "&page=" + bookmarkData.page + "&scroll=" + bookmarkData.scroll;
+			} else {
+				alert("❌ No bookmark found!");
+			}
+		}
+		//restaure saved bookmark position
+		document.addEventListener("DOMContentLoaded", () => {
+			let bookTitle = "<?php echo urlencode($_SESSION['original_file']); ?>";
+			let savedBookmark = localStorage.getItem("bookmark_" + bookTitle);
+
+			if (savedBookmark) {
+				let bookmarkData = JSON.parse(savedBookmark);
+				let savedScroll = bookmarkData.scroll || 0;
+				document.getElementById("book-content").scrollTop = savedScroll;
+			}
+		});
+
 
 
 

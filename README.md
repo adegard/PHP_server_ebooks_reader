@@ -1,5 +1,5 @@
 
-# EPUB Web server Reader 📖
+# EPUB Web server Reader 📖 - still in WORK IN PROGRESS -
 
 A lightweight web-based EPUB reader with **scroll navigation, page transitions, dark mode, and font size adjustments...**. Designed for a seamless e-reader experience directly in a browser, by connecting to the server PHP installed on a Raspeberry PI or other arm/pc home-server.
 

@@ -46,6 +46,7 @@ http://your-server/epub-reader/index_reader.php
 1. Click `Upload EPUB`
 2. Select an `.epub` file from your device
 3. The file will be stored in `/ebooks/` folder
+4. [ if you have api for cloudconvert (get it free), the epub file will be converted to mobi file usable by Kindle reader. ]
 
 ### **Read an EPUB**
 1. Choose a file from the dropdown
